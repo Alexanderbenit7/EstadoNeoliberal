@@ -65,7 +65,7 @@ plot(PeruDepa,
      border='NA',add=T)
 
 legend("right",
-       title='FONCODES (2017-2019)',
+       title='FONDES (2017-2019)',
        legend=c(paste0("Bajo"),
                 paste0("Medio"),
                 paste0("Alto")
@@ -82,7 +82,7 @@ plot(PeruDepa,
      border='NA',add=T)
 
 legend("right",
-       title='Avance FONCODES (2017)',
+       title='Avance FONDES (2017)',
        legend=c(paste0("Bajo"),
                 paste0("Medio"),
                 paste0("Alto")
@@ -99,7 +99,7 @@ plot(PeruDepa,
      border='NA',add=T)
 
 legend("right",
-       title='Avance FONCODES (2018)',
+       title='Avance FONDES (2018)',
        legend=c(paste0("Bajo"),
                 paste0("Medio"),
                 paste0("Alto")
