@@ -1,0 +1,108 @@
+```{r include=FALSE}
+folder='departamentos'
+fileName='DEPARTAMENTO.shp' # nivel 2 son provincias
+fileToRead=file.path(folder,fileName)
+
+library(rgdal)
+PeruDepa <- rgdal::readOGR(fileToRead,stringsAsFactors=FALSE)
+```
+
+```{r include=FALSE}
+data=read.csv("FONDES.csv", stringsAsFactors = T)
+```
+
+```{r include=FALSE}
+names(data) = c("REGION","ASIGNA_2017","AVANCE_2017","ASIGNA_2018","AVANCE_2018","ASIGNA_2019","CLUST")
+```
+
+```{r include=FALSE}
+data$AVANCE_2017 = substr(data$AVANCE_2017,4,50)
+data$AVANCE_2018 = substr(data$AVANCE_2018,4,50)
+```
+
+```{r include=FALSE}
+data$ASIGNA_2017 = as.numeric(data$ASIGNA_2017)
+data$ASIGNA_2018 = as.numeric(data$ASIGNA_2018)
+data$ASIGNA_2019 = as.numeric(data$ASIGNA_2019)
+data$AVANCE_2017 = as.numeric(data$AVANCE_2017)
+data$AVANCE_2018 = as.numeric(data$AVANCE_2018)
+```
+
+```{r include=FALSE}
+data$CLUST = factor(data$CLUST, ordered = T, levels = c(1:3))
+```
+
+```{r include=FALSE}
+data$CLUST=factor(car::recode(data$CLUST, "1=2; 3=1; 2=3"), ordered=T)
+```
+
+```{r include=FALSE}
+etiquetas=c(1,2,3)
+data$AVANCE_2017_ORD = cut(data$AVANCE_2017,
+                           breaks = 3,
+                           labels = etiquetas,
+                           ordered_result = T)
+```
+
+```{r include=FALSE}
+etiquetas=c(1,2,3)
+data$AVANCE_2018_ORD = cut(data$AVANCE_2018,
+                           breaks = 3,
+                           labels = etiquetas,
+                           ordered_result = T)
+```
+
+```{r include=FALSE}
+PeruDepa=merge(PeruDepa,data,by.x="DEPARTAMEN", by.y = "REGION",all.x=TRUE)
+```
+
+```{r fig.height = 6, echo=FALSE,warning=FALSE}
+#Mapa de latente:
+paleta=c("khaki1","gold","goldenrod2","goldenrod4") #colores
+plot(PeruDepa,col='white',border=T) 
+plot(PeruDepa,
+     col=paleta[PeruDepa$CLUST],
+     border='NA',add=T)
+
+legend("right",
+       title='FONCODES (2017-2019)',
+       legend=c(paste0("Bajo"),
+                paste0("Medio"),
+                paste0("Alto")
+                ),
+           fill=c("khaki1","gold","goldenrod2","goldenrod4"),cex=0.8,bty = "n")
+```
+
+```{r fig.height = 6, echo=FALSE,warning=FALSE}
+#Mapa de latente:
+paleta=c('seagreen1','gray',"palevioletred1") #colores
+plot(PeruDepa,col='white',border=T) 
+plot(PeruDepa,
+     col=paleta[PeruDepa$AVANCE_2017_ORD],
+     border='NA',add=T)
+
+legend("right",
+       title='Avance FONCODES (2017)',
+       legend=c(paste0("Bajo"),
+                paste0("Medio"),
+                paste0("Alto")
+                ),
+           fill=c('seagreen1','gray',"palevioletred1"),cex=0.8,bty = "n")
+```
+
+```{r fig.height = 6, echo=FALSE,warning=FALSE}
+#Mapa de latente:
+paleta=c('seagreen1','gray',"palevioletred1") #colores
+plot(PeruDepa,col='white',border=T) 
+plot(PeruDepa,
+     col=paleta[PeruDepa$AVANCE_2018_ORD],
+     border='NA',add=T)
+
+legend("right",
+       title='Avance FONCODES (2018)',
+       legend=c(paste0("Bajo"),
+                paste0("Medio"),
+                paste0("Alto")
+                ),
+           fill=c('seagreen1','gray',"palevioletred1"),cex=0.8,bty = "n")
+```
