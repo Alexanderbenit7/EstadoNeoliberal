@@ -1,3 +1,82 @@
+#### Presupuesto para la atención a emergencias por desastres
+
+```{r include=FALSE}
+folder='departamentos'
+fileName='DEPARTAMENTO.shp' # nivel 2 son provincias
+fileToRead=file.path(folder,fileName)
+
+library(rgdal)
+PeruDepa <- rgdal::readOGR(fileToRead,stringsAsFactors=FALSE)
+```
+
+```{r include=FALSE}
+data = read.csv("0068.csv")
+```
+
+```{r include=FALSE}
+names(data) = c("REGION","PIM2018","DEVEN2018","AVANCE2018","PIM2017","DEVEN2017","AVANCE2017","PIM2016","DEVEN2016","AVANCE2016","PIM2015","DEVEN2015","AVANCE2015","PIM2014","DEVEN2014","AVANCE2014","PIM2013","DEVEN2013","AVANCE2013","CLUST_PIM","CLUST_AVANCE")
+```
+
+```{r include=FALSE}
+data$CLUST_PIM = factor(data$CLUST_PIM, ordered = T, levels = c(1:3))
+```
+
+```{r include=FALSE}
+data$CLUST_PIM=factor(car::recode(data$CLUST_PIM, "1=3; 2=1; 3=2"), ordered=T)
+```
+
+```{r include=FALSE}
+data$CLUST_AVANCE = factor(data$CLUST_AVANCE, ordered = T, levels = c(1:3))
+```
+
+```{r include=FALSE}
+data$CLUST_AVANCE=factor(car::recode(data$CLUST_AVANCE, "2=3; 3=2; 1=1"), ordered=T)
+```
+
+```{r include=FALSE}
+x=data[,c(1,20,21)]
+```
+
+```{r include=FALSE}
+PeruDepa=merge(PeruDepa,x,by.x="DEPARTAMEN", by.y = "REGION",all.x=TRUE)
+```
+
+```{r fig.height = 6, echo=FALSE,warning=FALSE}
+#Mapa de latente:
+paleta=c('seagreen1','gray',"palevioletred1") #colores
+plot(PeruDepa,col='white',border=T) 
+plot(PeruDepa,
+     col=paleta[PeruDepa$CLUST_PIM],
+     border='NA',add=T)
+
+legend("right",
+       title='Prespuesto para la\natencion a desastres (2013-2018)',
+       legend=c(paste0("Bajo"),
+                paste0("Medio"),
+                paste0("Alto")
+                ),
+           fill=c('seagreen1','gray',"palevioletred1"),cex=0.8,bty = "n")
+```
+
+```{r fig.height = 6, echo=FALSE,warning=FALSE}
+#Mapa de latente:
+paleta=c('seagreen1','gray',"palevioletred1") #colores
+plot(PeruDepa,col='white',border=T) 
+plot(PeruDepa,
+     col=paleta[PeruDepa$CLUST_AVANCE],
+     border='NA',add=T)
+
+legend("right",
+       title='Ejecucion presupuestal para la\natencion a desastres (2013-2018)',
+       legend=c(paste0("Bajo"),
+                paste0("Medio"),
+                paste0("Alto")
+                ),
+           fill=c('seagreen1','gray',"palevioletred1"),cex=0.8,bty = "n")
+```
+
+#### 2. FONDES (2017-2019)
+
 ```{r include=FALSE}
 folder='departamentos'
 fileName='DEPARTAMENTO.shp' # nivel 2 son provincias
