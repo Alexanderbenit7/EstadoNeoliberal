@@ -1,0 +1,10 @@
+
+
+```{r}
+library(NbClust)
+library(factoextra)
+```
+
+```{r include=FALSE}
+data = read.csv("0068.csv")
+```
